@@ -29,16 +29,26 @@ You can install the development version of `biomasscan` from [GitHub](https://gi
 devtools::install_github("tesera/biomasscan")
 ```
 
-<!---
+
 ## Example
 
-This is a basic example which shows you how to solve a common problem:
+Biomass can be estimated for a single tree, by passing the relevant attributes. For example, for a Jack pine, 15.2 meters tall and with a diameter of 21 centimeters at breast height, we get:
 
-```{r example, eval = FALSE}
+```{r example1}
 library(biomasscan)
-## basic example code
+
+compute_biomass_single_tree(height = 15.2, diameter = 21, 
+                            species = 'Jack pine')
 ```
 
+As we can see, we get estimates of biomass (in kilograms) for four different components. We can turn this into a wide dataset by passing `wide = TRUE`:
+
+```{r example2}
+compute_biomass_single_tree(height = 15.2, diameter = 21, 
+                            species = 'Jack pine', wide = TRUE)
+```
+
+<!---
 What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
 
 ```{r cars, eval = FALSE}
@@ -55,3 +65,8 @@ plot(pressure)
 
 In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
 --->
+
+## References
+
+  - Lambert, M.-C., C.-H. Ung, and F. Raulier 2005. *Canadian national biomass equations*. Can. J. For. Res 35: 1996-2018.
+  - Ung, C.-H., Bernier, P., Guo, X.-J. 2008. *Canadian national biomass equations: new parameter estimates that include British Columbia data*. Can. J. For. Res 38:1123-2232.
