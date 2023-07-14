@@ -55,22 +55,46 @@ compute_biomass_single_tree(height = 15.2, diameter = 21,
 #> 1 Jack pine  9.29     14.2    7.51  101.
 ```
 
-<!---
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-&#10;
-```r
-summary(cars)
+We can also get the biomass estimates for a whole tree list:
+
+``` r
+library(tibble)
+
+test_df <- tribble(
+    ~spec, ~diam, ~ht,
+    'Jack pine', 21, 15.2,
+    'Trembling aspen', 32.1, 28,
+    'Black spruce', 31, 22.6,
+    'Black spruce', 21, 20.8,
+    'Eucaplyptus', 14, 10.2
+)
+
+test_df
+#> # A tibble: 5 × 3
+#>   spec             diam    ht
+#>   <chr>           <dbl> <dbl>
+#> 1 Jack pine        21    15.2
+#> 2 Trembling aspen  32.1  28  
+#> 3 Black spruce     31    22.6
+#> 4 Black spruce     21    20.8
+#> 5 Eucaplyptus      14    10.2
+
+compute_biomass(test_df, species = 'spec', diameter = 'diam', 
+                height = 'ht')
+#> # A tibble: 5 × 8
+#>   spec             diam    ht  Bark Branches Foliage  Wood Total
+#>   <chr>           <dbl> <dbl> <dbl>    <dbl>   <dbl> <dbl> <dbl>
+#> 1 Jack pine        21    15.2  9.29     14.2    7.51  101.  132.
+#> 2 Trembling aspen  32.1  28   78.1      43.9    7.36  402.  531.
+#> 3 Black spruce     31    22.6 34.3      32.8   20.0   282.  369.
+#> 4 Black spruce     21    20.8 16.5      10.6    8.29  132.  167.
+#> 5 Eucaplyptus      14    10.2 NA        NA     NA      NA    NA
 ```
-&#10;You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this.
-&#10;You can also embed plots, for example:
-&#10;
-&#10;In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN.
---->
 
 ## References
 
-- Lambert, M.-C., C.-H. Ung, and F. Raulier 2005. *Canadian national
+- Lambert, M.-C., C.-H. Ung, and F. Raulier (2005). *Canadian national
   biomass equations*. Can. J. For. Res 35: 1996-2018.
-- Ung, C.-H., Bernier, P., Guo, X.-J. 2008. *Canadian national biomass
+- Ung, C.-H., Bernier, P., Guo, X.-J. (2008). *Canadian national biomass
   equations: new parameter estimates that include British Columbia
   data*. Can. J. For. Res 38:1123-2232.

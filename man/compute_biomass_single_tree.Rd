@@ -4,14 +4,14 @@
 \alias{compute_biomass_single_tree}
 \title{Compute the biomass of a single tree}
 \usage{
-compute_biomass_single_tree(height, diameter, species, wide = FALSE)
+compute_biomass_single_tree(species, diameter, height, wide = FALSE)
 }
 \arguments{
-\item{height}{Height of the tree (in meters)}
+\item{species}{Species of the tree}
 
 \item{diameter}{Diameter of the tree at breast height (in centimeters)}
 
-\item{species}{Species of the tree}
+\item{height}{Height of the tree (in meters)}
 
 \item{wide}{Logical. Should the output be transformed into wide format?
 Defaults to \code{FALSE}}
@@ -35,10 +35,10 @@ should be given in meters, while diameters (at breast height) should be given
 in centimeters.
 }
 \examples{
-compute_biomass_single_tree(height = 15.2, diameter = 21, species = 'Jack pine')
-compute_biomass_single_tree(diameter = 21, species = 'Jack pine')
+compute_biomass_single_tree(species = 'Jack pine', diameter = 21, height = 15.2)
+compute_biomass_single_tree(species = 'Jack pine', diameter = 21)
 # Wide format
-compute_biomass_single_tree(height = 15.2, diameter = 21, species = 'Jack pine', wide = TRUE)
+compute_biomass_single_tree(species = 'Jack pine', diameter = 21, height = 15.2, wide = TRUE)
 }
 \references{
 Lambert, M.-C., C.-H. Ung, and F. Raulier 2005. Canadian national
