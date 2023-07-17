@@ -2,3 +2,5 @@
 
 export(compute_biomass)
 export(compute_biomass_single_tree)
+export(match_species_name)
+export(show_species)
