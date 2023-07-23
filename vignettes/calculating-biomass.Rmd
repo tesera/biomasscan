@@ -7,15 +7,11 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-```
-
-```{r setup}
-library(biomasscan)
 ```
 
 The goal of this package is to compute the biomass of trees based on allometric equations developed by Lambert *et al* (2005) and Ung *et al* (2008). These equations were derived using data from Canadian trees.
@@ -41,6 +37,7 @@ tree_df
 The first three species appear in the database of tree species, as we can verify as follows:
 
 ```{r}
+library(biomasscan)
 show_species()
 ```
 
