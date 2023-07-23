@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 # biomasscan
 
 <!-- badges: start -->
+[![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
 The goal of `biomasscan` is to provide an easy, programmatic way of computing biomass from a tree list. The functions of this package were designed to mimic the functionality of Natural Resources Canada's online tool, available [here](https://apps-scf-cfs.rncan.gc.ca/calc/en/biomass-calculator). 

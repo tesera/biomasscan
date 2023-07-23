@@ -45,7 +45,7 @@ in centimeters.
 \examples{
 test_df <- data.frame(
     'spec' = c("Jack pine", "Trembling aspen", "Black spruce",
-               "Black spruce", "Eucaplyptus"),
+               "Black spruce", "Eucalyptus"),
     'diam' = c(21.0, 32.1, 31.0, 21.0, 14.0),
     'ht' = c(15.2, 28.0, 22.6, 20.8, 10.2)
 )

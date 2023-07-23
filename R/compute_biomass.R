@@ -30,7 +30,7 @@
 #' @examples
 #' test_df <- data.frame(
 #'     'spec' = c("Jack pine", "Trembling aspen", "Black spruce",
-#'                "Black spruce", "Eucaplyptus"),
+#'                "Black spruce", "Eucalyptus"),
 #'     'diam' = c(21.0, 32.1, 31.0, 21.0, 14.0),
 #'     'ht' = c(15.2, 28.0, 22.6, 20.8, 10.2)
 #' )
@@ -85,6 +85,13 @@ compute_biomass <- function(data, species, diameter, height,
                            values_from = biomass,
                            id_cols = .id_tree,
                            values_fill = 0.0)
+
+    # In case there's no match for species
+    for (var in c('Bark', 'Branches', 'Foliage', 'Wood')) {
+        if (!var %in% names(out_df)) {
+            out_df[var] <- NA_real_
+        }
+    }
 
     if (total) {
         out_df <- dplyr::mutate(

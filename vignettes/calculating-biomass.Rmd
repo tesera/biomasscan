@@ -1,0 +1,140 @@
+---
+title: "Calculating biomass from a tree list"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{calculating-biomass}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(biomasscan)
+```
+
+The goal of this package is to compute the biomass of trees based on allometric equations developed by Lambert *et al* (2005) and Ung *et al* (2008). These equations were derived using data from Canadian trees.
+
+The starting point is a *tree list*, where each tree has a species, diameter, and height (optional). 
+
+```{r}
+library(tibble)
+
+tree_df <- tribble(
+    ~spec, ~diam, ~ht,
+    'Jack pine', 21, 15.2,
+    'Trembling aspen', 32.1, 28,
+    'Black spruce', 31, 22.6,
+    'Black spruce', 21, 20.8,
+    'Eucalyptus', 14, 10.2
+)
+
+tree_df
+```
+
+
+The first three species appear in the database of tree species, as we can verify as follows:
+
+```{r}
+show_species()
+```
+
+However, Eucalyptus does not appear. Nonetheless, we can still compute the biomass of the other four trees. The function `compute_biomass` takes four main arguments:
+
+  - `data`: The dataset (i.e. `data.frame`) containing the tree list.
+  - `species`: A character string giving the name of the column in `data` containing the species information.
+  - `diameter`: A character string giving the name of the column in `data` containing the diameter information. We assume the diameter is given in **centimeters**.
+  - `height`: A character string giving the name of the column in `data` containing the height information. We assume the height is given in **meters**.
+
+```{r}
+compute_biomass(tree_df, species = 'spec', diameter = 'diam', 
+                height = 'ht')
+```
+
+As we can see, we get a biomass estimate (in kilograms) for four different tree components, along with the total biomass. We can also see that no biomass estimate is given for the Eucalyptus tree.
+
+Note that the height information is *optional*. If it is omitted, a different set of allometric equations are used.
+
+```{r}
+compute_biomass(tree_df, species = 'spec', diameter = 'diam')
+```
+
+## Different naming conventions
+
+In order to allow for different naming conventions (e.g. "Black Spruce" vs "Spruce, Black"), we use fuzzy matching on the species name. Specifically, we compute the cosine distance between the species name in our database and the species name in the user's dataset, and we select the allometric equation corresponding to the most similar species name.
+
+Let's look at an example of this.
+
+```{r}
+library(tibble)
+
+tree_df <- tribble(
+    ~spec, ~diam, ~ht,
+    'Pine, Jack', 21, 15.2,
+    'Aspen, Trembling', 32.1, 28,
+    'Spruce, Black', 31, 22.6,
+    'Spruce, Black', 21, 20.8,
+    'Cedar', 14, 10.2
+)
+
+tree_df
+```
+
+If we simply try to pass this dataset to `compute_biomass`, we will only get `NA`s.
+
+```{r}
+compute_biomass(tree_df, species = 'spec', diameter = 'diam', 
+                height = 'ht')
+```
+
+
+Therefore, we first need to identify the appropriate matches. To do this, we can use the function `match_species_name`:
+
+```{r}
+match_species_name(tree_df, species = 'spec')
+```
+
+We can see that there are actually two types of cedar in our database, and the one selected by `match_species_name` is Western Red Cedar. If we prefer the Eastern Cedar, we can remove any ambiguity by renaming Cedar in the `tree_df`.
+
+```{r, message=FALSE}
+library(dplyr)
+
+tree_df <- mutate(tree_df,
+                  spec = if_else(spec == 'Cedar', 
+                                 'Cedar, Eastern', 
+                                 spec))
+
+match_species_name(tree_df, species = 'spec')
+```
+
+Once we are satisfied that the function `match_species_name` gives us the correct match, we can use the output to augment our dataset and pass it to `compute_biomass`.
+
+```{r}
+matches_df <- match_species_name(tree_df, species = 'spec')
+
+tree_df |> 
+    left_join(matches_df, by = 'spec') |> 
+    compute_biomass(species = 'biomasscan', diameter = 'diam', 
+                    height = 'ht')
+```
+
+
+One important note: the function `match_species_name` will *always* find a match, so it is important to filter out the trees that simply do not appear in the database of allometric equations:
+
+```{r}
+tribble(
+    ~spec, ~diam, ~ht,
+    'Jack pine', 21, 15.2,
+    'Trembling aspen', 32.1, 28,
+    'Black spruce', 31, 22.6,
+    'Black spruce', 21, 20.8,
+    'Eucalyptus', 14, 10.2
+) |> 
+    match_species_name(species = 'spec')
+```
+
